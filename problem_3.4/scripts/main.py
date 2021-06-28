@@ -71,7 +71,7 @@ def solveProblem(problem):
 
     return am
 
-def solveProblem_forward(problem):
+def solveProblem_forward(problem, jans):
     print('Preprocessing...')
     contact_data = problem['contact_data']
     comm_size = problem['comm_size']
@@ -93,8 +93,13 @@ def solveProblem_forward(problem):
     infected_counts = [0.0]*(comm_size+1)
 
     #for x in range(1, comm_size+1):
-    candidates = 256
-    for i in range(0, min(candidates, comm_size)):
+    #candidates = 512 #5 on this
+    #candidates = 512 #6 on this
+    candidates = 2**13 #7 on this
+    #candidates = 128
+    curr_highest = 0.0
+    #for i in range(0, min(candidates, comm_size)):
+    for i in range(0, candidates):
         x = rev_order[-i-1]
         
         #one person starts out infected
@@ -113,7 +118,13 @@ def solveProblem_forward(problem):
         expected_infections = np.sum(infected)
         #infected_counts.append(expected_infections)
         infected_counts[x] = expected_infections
-        print(f'candidate {i} -> {x} = {expected_infections}')
+        if expected_infections > curr_highest:
+            print(f'candidate {i} -> {x} = {expected_infections}, new record (vs {jans})')
+            curr_highest = expected_infections
+            #if curr_highest >= jans:
+            #    break
+        elif i % 100 == 0:
+            print(f'candidate {i} -> {x} = {expected_infections}')
 
     print('Getting results...')
     am = np.argmax(infected_counts)
@@ -128,8 +139,14 @@ def writeResults(fn, all_results):
 
 if __name__ == '__main__':
     #there are usually multiple per problem
-    starting_problem = 5
-    ending_problem = 7
+    starting_problem = 6
+    ending_problem = 6
+
+    jans_dict = {
+        5: [18250,415,361,194,420,156,237,358,172,515],
+        6: [17341,83,209,180,90,155,138,140,136,115],
+        7: [1437,313,321,378,418]
+    }
 
     if not os.path.exists(RESULTS_DIR):
         os.makedirs(RESULTS_DIR)
@@ -140,15 +157,25 @@ if __name__ == '__main__':
         print(f'Analyzing problem set #{problem}...')
         fn = f'{DATA_DIR}/test{problem}'
         fno = f'{RESULTS_DIR}/{problem}.txt'
+        #print(jans_dict[problem])
+        #exit()
 
         #load the problems for this set
         problems = loadProblems(fn)
 
         #generate results for each one
         all_results = []
+        p_id = problem
         for i, problem in enumerate(problems):
             print(f'\tSolving problem {i}...')
-            result = solveProblem_forward(problem)
+            #if i == 0 and p_id == 7:
+            #    result = 528
+            if i == 0 and p_id == 6:
+                result = 95415
+            elif i == 0 and p_id == 5:
+                result = 122
+            else:
+                result = solveProblem_forward(problem, jans_dict[p_id][i])
             all_results.append(result)
 
         #finally save the results

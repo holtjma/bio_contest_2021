@@ -71,9 +71,9 @@ def solveProblem(problem):
         results.append('')
 
     #NUM_FEAT = 31
-    NUM_FEAT = 255
+    NUM_FEAT = 127
     for ind, ki in enumerate(known_indices):
-        #print(ind, ki)
+        print('\t', ind, ki, len(known_indices))
         if ki:
             #this one is known, so just add the value
             for x in range(0, num_unknown):
@@ -102,7 +102,7 @@ def solveProblem(problem):
                 predictions = [ys[0]]*len(unknown_ints)
             else:
                 forest = GradientBoostingClassifier(
-                    random_state=0, max_depth=6, n_estimators=200, subsample=0.5
+                    random_state=0, max_depth=6, n_estimators=40, subsample=0.5
                 )
                 forest.fit(xs, ys)
 

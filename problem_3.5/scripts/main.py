@@ -122,9 +122,11 @@ def solveProblem(problem):
             
         con1 = generateConsensus(rs1, ref)
         delta1 = countDelta(con1, ref)
+        rs1_count = len(rs1)
         
         con2 = generateConsensus(rs2, ref)
         delta2 = countDelta(con2, ref)
+        rs2_count = len(rs2)
 
         '''
         print('\td1', delta1, len(rs1))
@@ -134,6 +136,7 @@ def solveProblem(problem):
         if delta2 < delta1:
             delta2 = delta1
             con2 = con1
+            rs2_count = rs1_count
 
         if delta2 >= min_polymorphs:
             #probability time?
@@ -141,14 +144,16 @@ def solveProblem(problem):
             errors = [countDelta(r, ref) for r in reads]
             total_errors = np.sum(errors)
             total_len = len(ref)*num_reads
-            print('\ttotal_error', total_errors, total_len, total_errors/total_len)
             #print((min(len(rs1), len(rs2)) / num_reads))
             frac_val = (min(len(rs1), len(rs2)) / num_reads)
-            fracs.append(frac_val)
-
+            #error_morph_ratio = total_errors / min_polymorphs
+            error_morph_ratio = abs(total_errors - num_reads*delta2) / num_reads
+            fracs.append((frac_val, error_morph_ratio))
+            print('\ttotal_error', total_errors, total_len, total_errors/total_len, frac_val)
+            
             #change this for each test
             #if frac_val < 0.01:
-            if frac_val < 0.05:
+            if frac_val < 0.07 and error_morph_ratio > 2.75:# and total_errors < 1000:
                 yield ("1", None)
             else:
                 yield("2", con2)
@@ -156,7 +161,10 @@ def solveProblem(problem):
             yield ("1", None)
         print()
 
-    print('fracs', sorted(fracs))
+    sf = sorted(fracs)
+    print('fracs')#, sorted(fracs))
+    for f in sf:
+        print(f)
         
 def writeResults(fn, all_results):
     fp = open(fn, 'w+')
@@ -169,8 +177,8 @@ def writeResults(fn, all_results):
 
 if __name__ == '__main__':
     #there are usually multiple per problem
-    starting_problem = 2
-    ending_problem = 2
+    starting_problem = 4
+    ending_problem = 4
 
     if not os.path.exists(RESULTS_DIR):
         os.makedirs(RESULTS_DIR)

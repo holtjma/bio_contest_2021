@@ -1,5 +1,6 @@
 # Bioinformatics Contest 2021 - Scripts
 This repository contains the scripts I (competitor "James Matthew Holt", 2nd place) used for the [Bioinformatics Contest 2021](https://bioinf.me/en/contest/2021).
+Final scoring for the contest can be found here: [http://mon.stepik.org/2021/](http://mon.stepik.org/2021/).
 
 ## Some notes on the code status
 1. Most (if not all) of the scripts are in their "final" state at the end of the competition, and haven't been modified since the end of the competition. 

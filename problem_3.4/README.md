@@ -1,4 +1,4 @@
-# Finals - Problem 3.2
+# Finals - Problem 3.4
 This problem is about finding who is most likely to infect the most people (i.e. who is the biggest superspreader) in a community.
 I have two versions of a solution, neither of which were perfect solutions to the problem.
 

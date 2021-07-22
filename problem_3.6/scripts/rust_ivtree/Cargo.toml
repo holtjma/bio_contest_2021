@@ -1,0 +1,13 @@
+[package]
+name = "rust_ivtree"
+version = "0.1.0"
+authors = ["holtjma <jholt@hudsonalpha.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.19"
+intervaltree = "0.2.6"
+rulinalg = "0.4.2"
+threadpool = "1.7.1"
